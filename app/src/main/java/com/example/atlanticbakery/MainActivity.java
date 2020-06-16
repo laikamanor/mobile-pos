@@ -3,6 +3,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -17,7 +18,7 @@ import  java.sql.DriverManager;
 import  java.sql.ResultSet;
 import  java.sql.SQLException;
 import  java.sql.Statement;
-import java.util.Base64;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     //Declaring layout button,editTexts and progress bar
@@ -28,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
 
     //Declaring connection variables
     Connection con;
-    String un, pass, db, ip;
     //End Declaring connection variables
 
 
@@ -37,22 +37,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
         //Getting values from button,editTexts and progress bar
-        login = (Button) findViewById(R.id.button);
-        username = (EditText) findViewById(R.id.editText);
-        password = (EditText) findViewById(R.id.editText2);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        login = findViewById(R.id.button);
+        username = findViewById(R.id.editText);
+        password = findViewById(R.id.editText2);
+        progressBar = findViewById(R.id.progressBar);
         //End Getting values from button,editTexts and progress bar
 
         progressBar.setVisibility(View.GONE);
 
+        checkCurrentLogin();
 
-        //Declaring Server ip,username,password and database
-        ip = "DELL,1433";
-        db = "AKPOS";
-        un = "admin";
-        pass = "admin";
-        //End Declaring Server ip,username,password and database
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,6 +62,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void checkCurrentLogin(){
+        SharedPreferences sharedPreferences = getSharedPreferences("LOGIN",MODE_PRIVATE);
+        String username = sharedPreferences.getString("username","");
+        String password =sharedPreferences.getString("password","");
+        assert password != null;
+        assert username != null;
+        if(!username.isEmpty() && !password.isEmpty()){
+            openMainMenu();
+        }
+    }
+
+    @SuppressLint("StaticFieldLeak")
     public class CheckLogin extends AsyncTask<String, String, String> {
         String z = "";
         Boolean isSuccess = false;
@@ -83,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 z = "Please enter Username and Password";
             } else {
                 try {
-                    con = connectionClass(un, pass, db, ip);
+                    con = connectionClass();
                     if (con == null) {
                         z = "Check Your Internet Access";
 
@@ -94,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
 //                        String decoded = new String(Base64.decode(encoded));
 //                        println(decoded) ;   // Outputs "Hello"
 
-                        String query = "select systemid from tblusers WHERE username='" + us.toString() + "'AND password='" + ps.toString() + "'";
+                        String query = "select systemid from tblusers WHERE username='" + us + "'AND password='" + ps + "'";
                         Statement stmt = con.createStatement();
 
                         ResultSet rs = stmt.executeQuery(query);
@@ -121,9 +130,17 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, s, Toast.LENGTH_LONG).show();
 
             if (isSuccess) {
+                saveLoggedIn();
                 openMainMenu();
             }
         }
+    }
+
+    public  void saveLoggedIn(){
+        SharedPreferences sharedPreferences = getSharedPreferences("LOGIN",MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("username",username.getText().toString()).apply();
+        editor.putString("password",password.getText().toString()).apply();
     }
 
     public  void openMainMenu(){
@@ -133,22 +150,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @SuppressLint("NewAPI")
-    public Connection connectionClass(String user, String password, String database, String server) {
+    public Connection connectionClass() {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         Connection connection = null;
-        String ConnectionURL = null;
+        String ConnectionURL;
         try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
-            ConnectionURL = "jdbc:jtds:sqlserver://192.168.42.1/AKPOS;user=admin;password=admin;";
+            ConnectionURL = "jdbc:jtds:sqlserver://192.168.137.1/AKPOS;user=admin;password=admin;";
+//            ConnectionURL = "jdbc:jtds:sqlserver://192.168.42.1/AKPOS;user=admin;password=admin;";
             connection = DriverManager.getConnection(ConnectionURL);
 
         } catch (SQLException se) {
-            Log.e("error here 1: ", se.getMessage());
+            Log.e("error here 1: ", Objects.requireNonNull(se.getMessage()));
         } catch (ClassNotFoundException e) {
             Log.e("error here 2: ", e.toString());
         } catch (Exception e) {
-            Log.e("error here 3: ", e.getMessage());
+            Log.e("error here 3: ", Objects.requireNonNull(e.getMessage()));
         }
         return connection;
     }

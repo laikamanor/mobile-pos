@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,19 +9,51 @@
 
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Scan QR Code"
-        android:textSize="16dp"
         android:id="@+id/btnScan"
-        />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="25dp"
+        android:layout_marginStart="33dp"
+        android:layout_marginEnd="33dp"
+        android:layout_marginRight="21dp"
+        android:background="@color/colorBlue"
+        android:drawableLeft="@drawable/ic_baseline_settings_overscan_24"
+        android:paddingStart="50dp"
+        android:paddingEnd="50dp"
+        android:text="Scan QR Code"
+        android:textColor="@android:color/white"
+        android:textSize="16dp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Result"
+        android:text="Result: N/A"
         android:id="@+id/lblResult"
         android:textSize="22sp"
         android:layout_marginTop="20dp"
-        />
-</LinearLayout>
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/btnScan"
+        android:textAlignment="center"
+        android:gravity="center_horizontal" />
+
+    <Button
+        android:id="@+id/btnAddCart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lblResult"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="33dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="33dp"
+        android:text="Add to Cart"
+        android:background="@color/colorPrimary"
+        android:drawableLeft="@drawable/ic_cart"
+        android:paddingStart="50dp"
+        android:paddingEnd="50dp"
+        android:textColor="@android:color/white" />
+
+
+</RelativeLayout>

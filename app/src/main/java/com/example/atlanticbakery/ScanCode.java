@@ -1,12 +1,7 @@
 package com.example.atlanticbakery;
-
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.media.MediaPlayer;
 import android.os.Bundle;
-
 import com.google.zxing.Result;
-
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 public class ScanCode extends AppCompatActivity implements ZXingScannerView.ResultHandler {
