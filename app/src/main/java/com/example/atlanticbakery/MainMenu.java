@@ -78,7 +78,7 @@ public class MainMenu extends AppCompatActivity {
     }
 
     public void gotoShoppingCart(){
-        Intent intent = new Intent(this, ShoppingCart.class);
+        Intent intent = new Intent(this, ShoppingCart2.class);
         startActivity(intent);
     }
 }

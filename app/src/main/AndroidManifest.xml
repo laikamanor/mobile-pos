@@ -12,16 +12,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ShoppingCart">
+        <activity android:name=".ShoppingCart_EditProduct">
         </activity>
+        <activity android:name=".ShoppingCart2">
+        </activity>
+        <activity android:name=".ShoppingCart" />
         <activity android:name=".ScanCode" />
         <activity android:name=".ScanQRCode" />
         <activity android:name=".MainMenu" />
         <activity android:name=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
     </application>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    tools:context=".ShoppingCart_EditProduct">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="147dp"
+        android:layout_height="150dp"
+        tools:layout_editor_absoluteX="62dp"
+        tools:layout_editor_absoluteY="80dp"
+        android:background="@drawable/cart_bg_header"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="80dp"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/itemname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="152dp"
+        android:text="UNKNOWN"
+        android:textSize="32sp"
+        app:layout_constraintStart_toStartOf="@id/imageView"
+        app:layout_constraintTop_toTopOf="@id/imageView"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5.00"
+        android:textColor="@color/colorPrimary"
+        android:textSize="25sp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="276dp"
+        app:layout_constraintStart_toStartOf="@id/itemname"
+        app:layout_constraintTop_toTopOf="@id/itemname"
+        android:layout_marginTop="40dp"/>
+
+    <EditText
+        android:id="@+id/quantity"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="center_horizontal"
+        android:inputType="numberDecimal"
+        android:textColor="@android:color/white"
+        android:background="@android:color/black"
+        android:textSize="35sp"
+        android:text="1"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="109dp"
+        tools:layout_editor_absoluteY="326dp"
+        app:layout_constraintLeft_toRightOf="@id/btnMinus"
+        app:layout_constraintTop_toTopOf="@id/btnMinus"
+        android:enabled="false"/>
+
+    <EditText
+        android:id="@+id/discount"
+        android:layout_width="101dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black"
+        android:ems="10"
+        android:gravity="center_horizontal"
+        android:inputType="numberDecimal"
+        android:text="0"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="32sp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="388dp"
+        app:layout_constraintStart_toStartOf="@id/btnMinus"
+        app:layout_constraintTop_toTopOf="@id/btnMinus"
+        android:layout_marginTop="60dp"/>
+
+    <EditText
+        android:id="@+id/totalPrice"
+        android:layout_width="188dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black"
+        android:ems="10"
+        android:gravity="center_horizontal"
+        android:inputType="numberDecimal"
+        android:text="5.00"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="30sp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="434dp"
+        app:layout_constraintStart_toStartOf="@id/discount"
+        app:layout_constraintTop_toTopOf="@id/discount"
+        android:layout_marginTop="60dp" />
+
+    <Button
+        android:id="@+id/btnPlus"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:text="+"
+        android:textSize="20sp"
+        android:background="@color/colorPrimary"
+        android:textColor="@android:color/white"
+        tools:layout_editor_absoluteX="62dp"
+        tools:layout_editor_absoluteY="323dp"
+        tools:ignore="MissingConstraints"
+        app:layout_constraintLeft_toRightOf="@id/quantity"
+        app:layout_constraintTop_toTopOf="@id/quantity"/>
+
+    <Button
+        android:id="@+id/btnMinus"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:text="-"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="216dp"
+        tools:layout_editor_absoluteY="323dp"
+        app:layout_constraintStart_toStartOf="@id/price"
+        app:layout_constraintTop_toTopOf="@id/price"
+        android:layout_marginTop="40dp"/>
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="%"
+        android:textSize="30sp"
+        app:layout_constraintLeft_toRightOf="@id/discount"
+        app:layout_constraintTop_toTopOf="@id/discount"
+        android:layout_marginLeft="10dp"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="190dp"
+        android:layout_height="40dp"
+        android:background="@android:color/holo_green_dark"
+        android:text="Save"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="-7dp"
+        tools:layout_editor_absoluteY="495dp"
+        app:layout_constraintStart_toStartOf="@id/totalPrice"
+        app:layout_constraintTop_toTopOf="@id/totalPrice"
+        android:layout_marginTop="50dp"/>
+
+    <CheckBox
+        android:id="@+id/checkFree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="220dp"
+        android:text="Free"
+        android:textSize="25sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

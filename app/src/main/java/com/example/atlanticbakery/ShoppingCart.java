@@ -1,13 +1,15 @@
 package com.example.atlanticbakery;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.DeadObjectException;
 import android.os.StrictMode;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -35,6 +37,7 @@ import java.util.Objects;
 
 public class ShoppingCart extends AppCompatActivity {
     Connection con;
+    String ginagawaMo;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +98,7 @@ public class ShoppingCart extends AppCompatActivity {
                         Toast.makeText(this, "Check Your Internet Access", Toast.LENGTH_SHORT).show();
 
                     } else {
-                        String query = "SELECT itemname,itemid,price FROM tblitems WHERE itemid=" + word + " AND status=1;";
+                        final String query = "SELECT itemname,itemid,price FROM tblitems WHERE itemid=" + word + " AND status=1;";
                         Statement stmt = con.createStatement();
 
                         ResultSet rs = stmt.executeQuery(query);
@@ -108,7 +111,7 @@ public class ShoppingCart extends AppCompatActivity {
                             layout1.setTag("layout" + rs.getString("itemid"));
                             layout.addView(layout1);
 
-                            TextView itemname = new TextView(this);
+                            final TextView itemname = new TextView(this);
                             itemname.setText(rs.getString("itemname") + "(" + rs.getString("price") + ")");
                             itemname.setPadding(20,20,20,20);
                             itemname.setLayoutParams(lp1);
@@ -129,22 +132,93 @@ public class ShoppingCart extends AppCompatActivity {
 //                            quantity.setPadding(10,10,10,10);
 //                            layout1.addView(quantity);
 
-                            ElegantNumberButton quantity = new ElegantNumberButton(this);
+                            final ElegantNumberButton quantity = new ElegantNumberButton(this);
                             quantity.setLayoutParams(lpQuantity);
                             quantity.setTag("quantity" + rs.getString("itemid"));
+                            quantity.setNumber("1");
+                            final int generatedQuantityID = View.generateViewId();
+                            quantity.setId(generatedQuantityID);
+                            quantity.setOnClickListener(new ElegantNumberButton.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+
+//                                    Dim priceBefore As Double = CDbl(CInt(txtquantity.Text) * price)
+//                                    txtamount.Text = CDbl(priceBefore - (CDbl(txtdiscount.Text) / 100) * priceBefore).ToString("n2")
+                                    String itemid = quantity.getTag().toString().replace("quantity","");
+                                    View root = getWindow().getDecorView().getRootView();
+                                    EditText currentAmount = root.findViewWithTag("totalprice" + itemid);
+                                    EditText currentDiscount = root.findViewWithTag("discount" + itemid);
+                                    if(Double.parseDouble(currentAmount.getText().toString()) < 0){
+                                        double final_amount = (Double.parseDouble(quantity.getNumber()) * getItemPrice(Integer.parseInt(itemid)));
+                                        currentAmount.setText(Double.toString(final_amount));
+                                    }else{
+                                        double priceBefore = Double.parseDouble(quantity.getNumber()) * getItemPrice(Integer.parseInt(itemid));
+                                        currentAmount.setText(Double.toString(priceBefore));
+                                    }
+                                }
+                            });
                             layout1.addView(quantity);
 
-                            EditText txtDiscount = new EditText(this);
+                            final EditText txtDiscount = new EditText(this);
                             txtDiscount.setLayoutParams(lpDiscount);
                             txtDiscount.setTag("discount" + rs.getString("itemid"));
-                            txtDiscount.setText("0");
-                            txtDiscount.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_CLASS_NUMBER);
+                            txtDiscount.setText("0.00");
+                            txtDiscount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                             txtDiscount.setBackgroundColor(Color.GRAY);
                             txtDiscount.setTextColor(Color.BLACK);
                             txtDiscount.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                            final int generatedDiscountPercentID = View.generateViewId();
+                            txtDiscount.setId(generatedDiscountPercentID);
+                            txtDiscount.addTextChangedListener(new TextWatcher() {
+                                @Override
+                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                                }
+
+                                @Override
+                                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                    String currentItemID = txtDiscount.getTag().toString().replace("discount","");
+                                    View root = getWindow().getDecorView().getRootView();
+                                    ElegantNumberButton currentQuantity = root.findViewWithTag("quantity" + currentItemID);
+                                    EditText currentAmount = root.findViewWithTag("totalprice" + currentItemID);
+                                    double discountPercent = 0.00;
+                                    double currentPrice = getItemPrice(Integer.parseInt(currentItemID));
+                                    double priceBefore = Double.parseDouble(currentQuantity.getNumber()) * currentPrice;
+                                        try{
+                                            if (Integer.parseInt(currentQuantity.getNumber().toString()) < 0){
+                                                txtDiscount.setText("0");
+                                            }
+                                            else if(Integer.parseInt(currentQuantity.getNumber().toString()) > 0){
+
+                                                if(Double.parseDouble(txtDiscount.getText().toString()) < 25){
+                                                    discountPercent = Double.parseDouble(txtDiscount.getText().toString());
+
+                                                    double totalAmount = (priceBefore - (discountPercent / 100) * priceBefore);
+
+                                                    currentAmount.setText(Double.toString(totalAmount));
+                                                }else if(Double.parseDouble(txtDiscount.getText().toString()) >= 25){
+                                                    discountPercent = Double.parseDouble(txtDiscount.getText().toString());
+
+                                                    double totalAmount = (priceBefore - (discountPercent / 100) * priceBefore);
+
+                                                    currentAmount.setText(Double.toString(totalAmount));
+                                                }
+                                            }
+                                        }catch (Exception ex){
+                                            if(txtDiscount.getText().equals("")){
+                                                currentAmount.setText(Double.toString(priceBefore));
+                                            }
+                                        }
+                                }
+
+                                @Override
+                                public void afterTextChanged(Editable s) {
+
+                                }
+                            });
                             layout1.addView(txtDiscount);
 
-                            EditText txtTotalPrice = new EditText(this);
+                            final EditText txtTotalPrice = new EditText(this);
                             txtTotalPrice.setLayoutParams(lpDiscount);
                             txtTotalPrice.setTag("totalprice" + rs.getString("itemid"));
                             txtTotalPrice.setText("0.00");
@@ -152,6 +226,43 @@ public class ShoppingCart extends AppCompatActivity {
                             txtTotalPrice.setBackgroundColor(Color.GRAY);
                             txtTotalPrice.setTextColor(Color.BLACK);
                             txtTotalPrice.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                            final int generatedTotalPriceID = View.generateViewId();
+                            txtTotalPrice.setId(generatedTotalPriceID);
+                            txtTotalPrice.addTextChangedListener(new TextWatcher() {
+                                @Override
+                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                                }
+
+                                @Override
+                                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                    try {
+
+                                        String currentItemID = txtTotalPrice.getTag().toString().replace("totalprice","");
+                                        double currentPrice = getItemPrice(Integer.parseInt(currentItemID));
+                                        View root = getWindow().getDecorView().getRootView();
+                                        ElegantNumberButton currentQuantity = root.findViewWithTag("quantity" + currentItemID);
+                                        EditText currentDiscount = root.findViewWithTag("discount" + currentItemID);
+                                        double discountPercent = Double.parseDouble(currentDiscount.getText().toString());
+                                        double priceBefore = Double.parseDouble(currentQuantity.getNumber()) * currentPrice;
+                                        if(Double.parseDouble(txtTotalPrice.getText().toString()) > priceBefore){
+                                            double final_discount = ((priceBefore - Double.parseDouble(txtTotalPrice.getText().toString())) /  priceBefore) * 100;
+                                            currentDiscount.setText(Double.toString(final_discount));
+                                        }else{
+                                            double final_discount = ((priceBefore - Double.parseDouble(txtTotalPrice.getText().toString())) /  priceBefore) * 100;
+                                            currentDiscount.setText(Double.toString(final_discount));
+                                        }
+                                    }catch (Exception ex){
+
+                                    }
+                                }
+
+                                @Override
+                                public void afterTextChanged(Editable s) {
+
+                                }
+                            });
+
                             layout1.addView(txtTotalPrice);
 
                             View view = new View(this);
@@ -189,7 +300,7 @@ public class ShoppingCart extends AppCompatActivity {
                         discounts.add(rs.getString("disname"));
                     }
                     con.close();
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,discounts);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, discounts);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     cmbDiscountType.setAdapter(adapter);
                 }
@@ -198,11 +309,47 @@ public class ShoppingCart extends AppCompatActivity {
                 Toast.makeText(this, ex.toString(), Toast.LENGTH_SHORT).show();
             }
 
-
             layoutPay.addView(cmbDiscountType);
-
             layout.addView(layoutPay);
+
+//            LinearLayout layoutSubmit = new LinearLayout(this);
+//
+//            Button btnPay = new Button(this);
+//            btnPay.setLayoutParams(lp1);
+//            btnPay.setText("PLACE ORDER");
+//            btnPay.setBackgroundColor(Color.GREEN);
+//            btnPay.setTextColor(Color.WHITE);
+//
+//            layoutSubmit.setLayoutParams(lp);
+
         }
+    }
+
+    public void toastMsg(String v){
+        Toast.makeText(this,v, Toast.LENGTH_SHORT).show();
+    }
+
+    public double getItemPrice(Integer id){
+        double result = 0.00;
+        try {
+            con = connectionClass();
+            if (con == null) {
+                Toast.makeText(this, "Check Your Internet Access", Toast.LENGTH_SHORT).show();
+                result = 0.00;
+            } else {
+                String query = "SELECT price FROM tblitems WHERE status=1 AND itemid=" + id;
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery(query);
+                if(rs.next()){
+                    result = Double.parseDouble(rs.getString("price"));
+                }
+                con.close();
+            }
+        }
+        catch (Exception ex){
+            result = 0.00;
+        }
+        return result;
     }
 
     @SuppressLint("NewAPI")
@@ -213,8 +360,8 @@ public class ShoppingCart extends AppCompatActivity {
         String ConnectionURL;
         try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
-            ConnectionURL = "jdbc:jtds:sqlserver://192.168.137.1/AKPOS;user=admin;password=admin;";
-//            ConnectionURL = "jdbc:jtds:sqlserver://192.168.42.1/AKPOS;user=admin;password=admin;";
+//            ConnectionURL = "jdbc:jtds:sqlserver://192.168.137.1/AKPOS;user=admin;password=admin;";
+            ConnectionURL = "jdbc:jtds:sqlserver://192.168.42.1/AKPOS;user=admin;password=admin;";
             connection = DriverManager.getConnection(ConnectionURL);
 
         } catch (SQLException se) {
