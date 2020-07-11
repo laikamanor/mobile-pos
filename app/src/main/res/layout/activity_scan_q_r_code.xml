@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    tools:context=".ScanQRCode">
+    tools:context=".ScanQRCode"
+    android:orientation="horizontal"
+    android:theme="@style/ThemeOverlay.AppCompat">
 
 
     <Button
@@ -54,6 +56,15 @@
         android:paddingStart="50dp"
         android:paddingEnd="50dp"
         android:textColor="@android:color/white" />
+
+    <ProgressBar
+        android:id="@+id/progWait"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnAddCart"
+        android:layout_marginTop="10dp"
+        android:layout_centerInParent="true"/>
 
 
 </RelativeLayout>

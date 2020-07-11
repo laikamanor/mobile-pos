@@ -12,20 +12,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ShoppingCart_EditProduct">
-        </activity>
-        <activity android:name=".ShoppingCart2">
-        </activity>
-        <activity android:name=".ShoppingCart" />
-        <activity android:name=".ScanCode" />
-        <activity android:name=".ScanQRCode" />
-        <activity android:name=".MainMenu" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".SplashScreen">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".IPAddress"></activity>
+        <activity
+            android:name=".CreateUser"
+            android:parentActivityName=".MainMenu" />
+        <activity
+            android:name=".ShoppingCart"
+            android:parentActivityName=".MainMenu" />
+        <activity
+            android:name=".ScanCode"
+            android:parentActivityName=".ScanQRCode" />
+        <activity
+            android:name=".ScanQRCode"
+            android:parentActivityName=".MainMenu" />
+        <activity android:name=".MainMenu" />
+        <activity android:name=".MainActivity"></activity>
     </application>
 
 </manifest>

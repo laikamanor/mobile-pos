@@ -1,5 +1,6 @@
 package com.example.atlanticbakery;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -11,22 +12,20 @@ import androidx.annotation.Nullable;
 public class DatabaseHelper extends SQLiteOpenHelper {
     public  static  final String DATABASE_NAME = "AKPOS.db";
     public  static  final String TABLE_NAME = "tblorders";
-    public  static  final String COL_1 = "id";
-    public  static  final String COL_2 = "itemid";
-    public  static  final String COL_3 = "quantity";
-    public  static  final String COL_4 = "discountpercent";
-    public  static  final String COL_5 = "totalprice";
-    public  static  final String COL_6 = "free";
-
+    public  static  final String COL_2 = "itemname";
+    public  static  final String COL_3 = "price";
+    public  static  final String COL_4 = "quantity";
+    public  static  final String COL_5 = "discountpercent";
+    public  static  final String COL_6 = "totalprice";
+    public  static  final String COL_7 = "free";
 
     public DatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, 1);
-        SQLiteDatabase db = this.getWritableDatabase();
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table tblorders " + "(id INTEGER PRIMARY KEY AUTOINCREMENT,itemid INTEGER, quantity FLOAT, discountpercent FLOAT, totalprice FLOAT, free INTEGER)");
+        db.execSQL("create table tblorders " + "(id INTEGER PRIMARY KEY AUTOINCREMENT,itemname TEXT, quantity FLOAT,price FLOAT, discountpercent FLOAT, totalprice FLOAT, free INTEGER)");
 
     }
 
@@ -36,27 +35,103 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertData(Integer itemid, Integer quantity, Double discountpercent, Double totalprice, Integer free){
+    public boolean insertData(Integer quantity, Double discountpercent, Double price, Integer free,Double totalprice, String item_name){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COL_2, itemid);
-        contentValues.put(COL_3, quantity);
-        contentValues.put(COL_4, discountpercent);
-        contentValues.put(COL_5, totalprice);
-        contentValues.put(COL_6, free);
+        contentValues.put(COL_2, item_name);
+        contentValues.put(COL_3, price);
+        contentValues.put(COL_4, quantity);
+        contentValues.put(COL_5, discountpercent);
+        contentValues.put(COL_6, totalprice);
+        contentValues.put(COL_7, free);
         long resultQuery = db.insert(TABLE_NAME,null, contentValues);
-        boolean result = false;
-        if(resultQuery == -1){
-            result= false;
-        }else{
-            result = true;
-        }
+        boolean result;
+        result = resultQuery != -1;
         return result;
     }
 
     public Cursor getAllData(){
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor result = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
-        return result;
+        return db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+    }
+
+    public Cursor getItemandQuantity(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("SELECT itemname,quantity FROM " + TABLE_NAME, null);
+    }
+
+    public Double getPrice(Integer id){
+        double resultPrice = 0.00;
+        SQLiteDatabase db = this.getReadableDatabase();
+        @SuppressLint("Recycle") Cursor result = db.rawQuery("SELECT price FROM " + TABLE_NAME + " WHERE id=" + id + ";", null);
+        if(result.moveToFirst()){
+            do{
+                resultPrice = Double.parseDouble(result.getString(0));
+            }
+            while (result.moveToNext());
+        }
+        return resultPrice;
+    }
+
+    public Double getSubTotal(){
+        double resultSubTotal = 0.00;
+        SQLiteDatabase db = this.getReadableDatabase();
+        @SuppressLint("Recycle") Cursor result = db.rawQuery("SELECT IFNULL(SUM(totalprice),0) FROM " + TABLE_NAME + ";", null);
+        if(result.moveToFirst()){
+            do{
+                resultSubTotal = Double.parseDouble(result.getString(0));
+            }
+            while (result.moveToNext());
+        }
+        return resultSubTotal;
+    }
+
+    public Double getSubTotalBefore(){
+        double resultSubTotal = 0.00;
+        SQLiteDatabase db = this.getReadableDatabase();
+        @SuppressLint("Recycle") Cursor result = db.rawQuery("SELECT SUM(quantity * price) [subtotal] FROM " + TABLE_NAME + ";", null);
+        if(result.moveToFirst()){
+            do{
+                resultSubTotal = Double.parseDouble(result.getString(0));
+            }
+            while (result.moveToNext());
+        }
+        return resultSubTotal;
+    }
+
+    public boolean updateData(String id, Double quantity,Double discountpercent,Double totalprice, Integer free){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("id", id);
+        contentValues.put("quantity", quantity);
+        contentValues.put("discountpercent", discountpercent);
+        contentValues.put("totalprice", totalprice);
+        contentValues.put("free", free);
+        db.update(TABLE_NAME, contentValues, "id = ?", new String[] {id});
+        return true;
+    }
+
+    public  Integer deleteData(String id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_NAME, "id = ?", new  String[] {id});
+    }
+
+    public Integer countItems(){
+        int resultPrice = 0;
+        SQLiteDatabase db = this.getReadableDatabase();
+        @SuppressLint("Recycle") Cursor result = db.rawQuery("SELECT COUNT(id) FROM " + TABLE_NAME + ";", null);
+        if(result.moveToFirst()){
+            do{
+                resultPrice = Integer.parseInt(result.getString(0));
+            }
+            while (result.moveToNext());
+        }
+        return resultPrice;
+    }
+
+    public void truncateTable(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_NAME);
+        db.execSQL("VACUUM");
     }
 }

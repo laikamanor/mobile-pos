@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/consLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ShoppingCart2">
@@ -16,7 +17,8 @@
         app:layout_editor_absoluteX="-3dp"
         app:layout_editor_absoluteY="0dp"
         tools:ignore="MissingConstraints"
-        android:id="@+id/bg_header"/>
+        android:id="@+id/bg_header"
+        android:contentDescription="TODO" />
 
     <TextView
         android:textColor="#fff"
@@ -53,16 +55,19 @@
         android:gravity="center"
         tools:ignore="MissingConstraints"
         app:layout_constraintTop_toBottomOf="@id/itemsCount"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="20dp"
+        android:id="@+id/linearLayoutItems">
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:id="@+id/scrollViewItems">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:id="@+id/items">
 
                 <LinearLayout
                     android:id="@+id/item1"
@@ -75,8 +80,7 @@
                     app:layout_constraintHorizontal_bias="0.32"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/itemsCount"
-                    tools:ignore="MissingConstraints">
+                    app:layout_constraintTop_toBottomOf="@+id/itemsCount">
 
                     <ImageView
                         android:layout_width="54dp"
