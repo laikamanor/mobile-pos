@@ -47,11 +47,13 @@ public class item_class {
                 Toast.makeText(activity, "Check Your Internet Access", Toast.LENGTH_SHORT).show();
             } else {
                 String query = "SELECT ISNULL(endbal,0) [endbal] FROM tblinvitems WHERE itemname='" + itemname + "' AND" +
-                        " invnum=(SELECT TOP 1 invnum FROM tblinvsum ORDER BY invid DESC);";
+                        " invnum=(SELECT TOP 1 invnum FROM tblinvsum ORDER BY invsumid DESC);";
                 Statement stmt = con.createStatement();
                 ResultSet rs = stmt.executeQuery(query);
                 if(rs.next()){
-                    result = Double.parseDouble(rs.getString("endbal")) > 0;
+                    if(rs.getDouble("endbal") > 0){
+                        result = true;
+                    }
                 }
                 if(result){
                     SharedPreferences sharedPreferences = activity.getSharedPreferences("LOGIN",MODE_PRIVATE);
@@ -60,7 +62,10 @@ public class item_class {
                     String query2 = "SELECT ISNULL(postype,'') FROM tblusers WHERE systemid=" + userid + " AND postype !='Coffee Shop';";
                     Statement stmt2 = con.createStatement();
                     ResultSet rs2 = stmt2.executeQuery(query2);
-                    result = rs2.next();
+                    if (rs2.next()) result = true;
+                    else {
+                        result = false;
+                    }
                     con.close();
                 }
             }

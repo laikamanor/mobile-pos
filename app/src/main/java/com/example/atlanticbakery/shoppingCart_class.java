@@ -84,7 +84,7 @@ public class shoppingCart_class {
                 con.close();
             }
         }catch (Exception ex){
-            Toast.makeText(activity, ex.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "returnDiscounts() " + ex.getMessage(), Toast.LENGTH_SHORT).show();
         }
         return discounts;
     }
@@ -99,7 +99,7 @@ public class shoppingCart_class {
                 while (cursorData.moveToNext()) {
                     con = cc.connectionClass(activity);
                     String query = "SELECT ISNULL(endbal,0) [endbal] FROM tblinvitems WHERE itemname='" + cursorData.getString(0) + "' AND" +
-                            " invnum=(SELECT TOP 1 invnum FROM tblinvsum ORDER BY invid DESC);";
+                            " invnum=(SELECT TOP 1 invnum FROM tblinvsum ORDER BY invsumid DESC);";
                     Statement stmt = con.createStatement();
                     ResultSet rs = stmt.executeQuery(query);
                     if(rs.next()){
@@ -125,7 +125,7 @@ public class shoppingCart_class {
                 }
             }
         }catch (Exception ex){
-            Toast.makeText(activity, ex.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "checkEndingBalance() " + ex.getMessage(), Toast.LENGTH_SHORT).show();
         }
         return result.toString();
     }
@@ -146,7 +146,8 @@ public class shoppingCart_class {
                 con.close();
             }
         }
-        catch (Exception ignored){
+        catch (Exception ex) {
+            Toast.makeText(activity, "getOrderNumber() " + ex.getMessage(), Toast.LENGTH_SHORT).show();
         }
         return result;
     }
@@ -167,7 +168,8 @@ public class shoppingCart_class {
                 con.close();
             }
         }
-        catch (Exception ignored){
+        catch (Exception ex){
+            Toast.makeText(activity, "getDiscountPercent() " + ex.getMessage(), Toast.LENGTH_SHORT).show();
         }
         return result;
     }

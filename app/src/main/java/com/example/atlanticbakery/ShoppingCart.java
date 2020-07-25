@@ -945,6 +945,7 @@ public class ShoppingCart extends AppCompatActivity {
                     Statement stmt2 = con.createStatement();
                     stmt2.executeUpdate(query2);
                 }
+                con.close();
                 myDb.truncateTable();
                 showMessage("Transaction Completed", "Order #: " + ordernum + "\n" + "Change: " + change);
                 loadData();

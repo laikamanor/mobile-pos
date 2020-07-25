@@ -28,6 +28,7 @@ public class MainMenu extends AppCompatActivity {
         Button btnScanCode = findViewById(R.id.btnQrCode);
         Button btnShoppingCart = findViewById(R.id.btnShoppingCart);
         Button btnAdmin = findViewById(R.id.admin);
+        Button btnInventory = findViewById(R.id.btnInventory);
         checkWorkgroup();
 
         btnAdmin.setOnClickListener(new View.OnClickListener() {
@@ -68,6 +69,17 @@ public class MainMenu extends AppCompatActivity {
                 }
                 mLastClickTime = SystemClock.elapsedRealtime();
                 gotoShoppingCart();
+            }
+        });
+
+        btnInventory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(SystemClock.elapsedRealtime() - mLastClickTime < 1000){
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
+                gotoInventory();
             }
         });
     }
@@ -118,5 +130,8 @@ public class MainMenu extends AppCompatActivity {
 
     public void gotoCreateUser(){
         startActivity(uic.goTo(this, CreateUser.class));
+    }
+    public void gotoInventory(){
+        startActivity(uic.goTo(this, Inventory.class));
     }
 }

@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
         login = findViewById(R.id.button);
         username = findViewById(R.id.editText);
         password = findViewById(R.id.editText2);
-        checkCurrentLogin();
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,18 +50,6 @@ public class MainActivity extends AppCompatActivity {
                 checkLogin.execute("");
             }
         });
-
-    }
-
-    public void checkCurrentLogin(){
-        SharedPreferences sharedPreferences = getSharedPreferences("LOGIN",MODE_PRIVATE);
-        String username = sharedPreferences.getString("username","");
-        String password =sharedPreferences.getString("password","");
-        assert password != null;
-        assert username != null;
-        if(!username.isEmpty() && !password.isEmpty()){
-            openMainMenu();
-        }
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -114,12 +101,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public  void saveLoggedIn(){
+        String susername = username.getText().toString();
         String spassword = Base64.encodeToString(password.getText().toString() .getBytes(),0);
         SharedPreferences sharedPreferences = getSharedPreferences("LOGIN",MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("username",username.getText().toString()).apply();
+        editor.putString("username",susername).apply();
         editor.putString("password",spassword).apply();
         editor.putString("userid",Integer.toString(userid)).apply();
+        uc.insetLoginLogs(MainActivity.this, susername);
+        uc.checkCutOff(MainActivity.this, susername);
     }
 
     public  void openMainMenu(){

@@ -3,8 +3,10 @@ package com.example.atlanticbakery;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.text.Html;
 import android.view.View;
@@ -75,7 +77,7 @@ public class ScanQRCode extends AppCompatActivity {
                         Toast.makeText(ScanQRCode.this, "item not found", Toast.LENGTH_SHORT).show();
                     } else if (hasStock) {
                         saveData();
-                    } else {
+                    }else if(!hasStock) {
                         final AlertDialog.Builder myDialog = new AlertDialog.Builder(ScanQRCode.this);
                         myDialog.setTitle("Atlantic Bakery");
                         myDialog.setMessage("This item is out of stock! Are you sure you want to add to cart?");
@@ -102,14 +104,46 @@ public class ScanQRCode extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     public void saveData() {
-        String itemName = resultText.getText().toString();
-        double price = itemc.returnItemNamePrice(ScanQRCode.this, itemName);
-        boolean isInserted = myDb.insertData(1, 0.00, price, 0, price, itemName);
-        if (isInserted) {
-            Toast.makeText(this, "Item Added", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Item Not Added", Toast.LENGTH_SHORT).show();
+        checkItem checkItem = new checkItem();
+        checkItem.execute("");
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    public class checkItem extends AsyncTask<String, String, String> {
+        String z = "";
+
+        final LoadingDialog loadingDialog = new LoadingDialog(ScanQRCode.this);
+
+        @Override
+        protected void onPreExecute() {
+            loadingDialog.startLoadingDialog();
         }
-        resultText.setText("Result: N/A");
+
+        @Override
+        protected String doInBackground(String... params) {
+            String itemName = resultText.getText().toString();
+            double price = itemc.returnItemNamePrice(ScanQRCode.this, itemName);
+            boolean isInserted = myDb.insertData(1, 0.00, price, 0, price, itemName);
+            if (isInserted) {
+                z = "Item Added";
+            } else {
+                z = "Item Not Added";
+            }
+            resultText.setText("Result: N/A");
+            return z;
+        }
+
+        @Override
+        protected void onPostExecute(final String s) {
+            Handler handler = new Handler();
+            Runnable r = new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(ScanQRCode.this, s, Toast.LENGTH_LONG).show();
+                    loadingDialog.dismissDialog();
+                }
+            };
+            handler.postDelayed(r, 1000);
+        }
     }
 }

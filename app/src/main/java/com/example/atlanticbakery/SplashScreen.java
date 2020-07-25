@@ -6,6 +6,7 @@ import android.os.Handler;
 
 public class SplashScreen extends AppCompatActivity {
     DatabaseHelper myDb = new DatabaseHelper(this);
+    prefs_class pc = new prefs_class();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +26,8 @@ public class SplashScreen extends AppCompatActivity {
 
     public void goTO(){
         myDb.truncateTable();
-        Intent intent = new Intent(this, MainActivity.class);
+        pc.loggedOut(SplashScreen.this);
+        Intent intent = new Intent(this, IPAddress.class);
         startActivity(intent);
         finish();
     }

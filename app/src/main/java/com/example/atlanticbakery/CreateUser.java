@@ -166,9 +166,6 @@ public class CreateUser extends AppCompatActivity {
                 txtUsername.getText().clear();
                 txtPassword.getText().clear();
                 txtConfirmPassword.getText().clear();
-                cmbWorkgroup.setSelection(0);
-                cmbBranch.setSelection(0);
-                cmbPOSType.setSelection(0);
             }
         }catch(SQLException ex){
             result = ex.getMessage();
