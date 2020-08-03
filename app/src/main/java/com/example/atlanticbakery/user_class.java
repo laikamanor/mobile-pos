@@ -21,9 +21,9 @@ public class user_class {
     security_class sc = new security_class();
     Connection con;
     public Integer checkUsernamePassword(Activity activity,String colName, String username, String password){
-        Connection con = cc.connectionClass(activity);
         int result = 0;
-        if(cc == null){
+        Connection con = cc.connectionClass(activity);
+        if(con == null){
             Toast.makeText(activity, "Check Your Internet Access", Toast.LENGTH_SHORT).show();
         }else{
             try{

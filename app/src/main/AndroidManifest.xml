@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.atlanticbakery">
 
     <uses-permission android:name="android.permission.CAMERA" />
@@ -12,9 +13,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Inventory"
-            android:parentActivityName=".MainMenu"
-            />
+        <activity android:name=".Main"></activity>
+        <activity android:name=".CancelTransactionPOS" />
+        <activity
+            android:name=".Nav"
+            android:label="@string/title_activity_nav" />
+        <activity
+            android:name=".CancelTransaction"
+            android:parentActivityName=".MainMenu" />
+        <activity
+            android:name=".Inventory"
+            android:parentActivityName=".MainMenu" />
         <activity android:name=".SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,9 +40,9 @@
             android:parentActivityName=".MainMenu" />
         <activity
             android:name=".ScanCode"
-            android:parentActivityName=".ScanQRCode" />
+            android:parentActivityName=".QRCode" />
         <activity
-            android:name=".ScanQRCode"
+            android:name=".Received"
             android:parentActivityName=".MainMenu" />
         <activity android:name=".MainMenu" />
         <activity android:name=".MainActivity" />

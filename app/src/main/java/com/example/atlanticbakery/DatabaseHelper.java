@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 public class DatabaseHelper extends SQLiteOpenHelper {
     public  static  final String DATABASE_NAME = "AKPOS.db";
     public  static  final String TABLE_NAME = "tblorders";
+    public  static  final String TABLE_NAME2 = "tblreceived";
     public  static  final String COL_2 = "itemname";
     public  static  final String COL_3 = "price";
     public  static  final String COL_4 = "quantity";
@@ -26,12 +27,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table tblorders " + "(id INTEGER PRIMARY KEY AUTOINCREMENT,itemname TEXT, quantity FLOAT,price FLOAT, discountpercent FLOAT, totalprice FLOAT, free INTEGER)");
-
+        db.execSQL("create table " + TABLE_NAME2 + "(id INTEGER PRIMARY KEY AUTOINCREMENT,itemname TEXT, quantity FLOAT)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME2);
         onCreate(db);
     }
 
@@ -53,11 +55,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor getAllData(){
         SQLiteDatabase db = this.getWritableDatabase();
         return db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
-    }
-
-    public Cursor getItemandQuantity(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        return db.rawQuery("SELECT itemname,quantity FROM " + TABLE_NAME, null);
     }
 
     public Double getPrice(Integer id){
@@ -133,5 +130,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE FROM " + TABLE_NAME);
         db.execSQL("VACUUM");
+    }
+
+    public Cursor getItemandQuantity(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("SELECT itemname,quantity FROM " + TABLE_NAME, null);
+    }
+
+    public boolean checkForTableExists(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String sql = "SELECT name FROM sqlite_master WHERE type='table' AND name='"+ TABLE_NAME +"'";
+        Cursor mCursor = db.rawQuery(sql, null);
+        if (mCursor.getCount() > 0) {
+            return true;
+        }
+        mCursor.close();
+        return false;
     }
 }

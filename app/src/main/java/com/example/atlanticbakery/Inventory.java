@@ -113,7 +113,7 @@ public class Inventory extends AppCompatActivity implements DatePickerDialog.OnD
 
     public List<String> returnInventory(){
         final List<String>  result = new ArrayList<>();
-        String datee = latestInventoryNumber().toString();
+        String datee = latestInventoryNumber();
         try {
             con = cc.connectionClass(this);
             if (con == null) {

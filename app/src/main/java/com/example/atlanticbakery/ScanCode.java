@@ -28,7 +28,7 @@ public class ScanCode extends AppCompatActivity implements ZXingScannerView.Resu
 
     @Override
     public void handleResult(Result result) {
-        ScanQRCode.resultText.setText(result.getText());
+        QRCode.resultText.setText(result.getText());
         onBackPressed();
     }
 

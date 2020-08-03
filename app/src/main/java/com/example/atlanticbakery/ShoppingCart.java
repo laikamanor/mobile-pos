@@ -67,8 +67,8 @@ public class ShoppingCart extends AppCompatActivity {
     @SuppressLint({"SetTextI18n", "ResourceType", "RtlHardcoded"})
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void loadData(){
-            final LinearLayout layout = findViewById(R.id.parentLayout);
-            layout.removeAllViews();
+        final LinearLayout layout = findViewById(R.id.parentLayout);
+        layout.removeAllViews();
 
 
         LinearLayout.LayoutParams layoutParamsPay = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -134,9 +134,9 @@ public class ShoppingCart extends AppCompatActivity {
                         computeTotal();
                         layout.removeView(layout1);
                         toastMsg("Item Removed",0);
-                       if(layout.getChildCount() == 2){
-                           removeItem();
-                       }
+                        if(layout.getChildCount() == 2){
+                            removeItem();
+                        }
                     }
                 });
 

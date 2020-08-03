@@ -1,5 +1,4 @@
 package com.example.atlanticbakery;
-
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,7 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Objects;
 
-public class ScanQRCode extends AppCompatActivity {
+public class QRCode extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
     public static TextView resultText;
     ProgressBar progressBar;
@@ -30,18 +29,19 @@ public class ScanQRCode extends AppCompatActivity {
 
     long mLastClickTime = 0;
 
-//   Classes
+    //   Classes
     item_class itemc = new item_class();
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_scan_q_r_code);
+
 
         Objects.requireNonNull(getSupportActionBar()).setTitle(Html.fromHtml("<font color='#ffffff'>Scan QR Code</font>"));
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
 
-        setContentView(R.layout.activity_scan_q_r_code);
         resultText =  findViewById(R.id.lblResult);
         Button btnScan = findViewById(R.id.btnScan);
         Button btnCart = findViewById(R.id.btnAddCart);
@@ -64,21 +64,21 @@ public class ScanQRCode extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String itemName = resultText.getText().toString();
-                boolean hasStock = itemc.checkItemNameStock(ScanQRCode.this, itemName);
+                boolean hasStock = itemc.checkItemNameStock(QRCode.this, itemName);
                 if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                     return;
                 }
                 mLastClickTime = SystemClock.elapsedRealtime();
                 if (itemName.equals("Result: N/A")) {
-                    Toast.makeText(ScanQRCode.this, "Scan Item first", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(QRCode.this, "Scan Item first", Toast.LENGTH_SHORT).show();
                 } else {
-                    boolean isItemNameExist = itemc.checkItemName(ScanQRCode.this, itemName);
+                    boolean isItemNameExist = itemc.checkItemName(QRCode.this, itemName);
                     if (!isItemNameExist) {
-                        Toast.makeText(ScanQRCode.this, "item not found", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(QRCode.this, "item not found", Toast.LENGTH_SHORT).show();
                     } else if (hasStock) {
                         saveData();
                     }else if(!hasStock) {
-                        final AlertDialog.Builder myDialog = new AlertDialog.Builder(ScanQRCode.this);
+                        final AlertDialog.Builder myDialog = new AlertDialog.Builder(QRCode.this);
                         myDialog.setTitle("Atlantic Bakery");
                         myDialog.setMessage("This item is out of stock! Are you sure you want to add to cart?");
                         myDialog.setCancelable(false);
@@ -112,7 +112,7 @@ public class ScanQRCode extends AppCompatActivity {
     public class checkItem extends AsyncTask<String, String, String> {
         String z = "";
 
-        final LoadingDialog loadingDialog = new LoadingDialog(ScanQRCode.this);
+        final LoadingDialog loadingDialog = new LoadingDialog(QRCode.this);
 
         @Override
         protected void onPreExecute() {
@@ -122,7 +122,7 @@ public class ScanQRCode extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
             String itemName = resultText.getText().toString();
-            double price = itemc.returnItemNamePrice(ScanQRCode.this, itemName);
+            double price = itemc.returnItemNamePrice(QRCode.this, itemName);
             boolean isInserted = myDb.insertData(1, 0.00, price, 0, price, itemName);
             if (isInserted) {
                 z = "Item Added";
@@ -139,7 +139,7 @@ public class ScanQRCode extends AppCompatActivity {
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(ScanQRCode.this, s, Toast.LENGTH_LONG).show();
+                    Toast.makeText(QRCode.this, s, Toast.LENGTH_LONG).show();
                     loadingDialog.dismissDialog();
                 }
             };

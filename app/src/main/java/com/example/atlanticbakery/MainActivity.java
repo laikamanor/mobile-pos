@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
             String us = username.getText().toString();
             String ps = password.getText().toString();
             Integer resultUserID = uc.checkUsernamePassword(MainActivity.this,"username", us, ps);
-
             if (us.trim().equals("") || ps.trim().equals("")) {
                 z = "Please enter Username and Password";
             }else if(resultUserID > 0){
@@ -80,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 z = "Invalid Credentials";
             }
             return z;
+
         }
 
         @Override
