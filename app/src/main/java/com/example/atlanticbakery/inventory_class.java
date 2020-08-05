@@ -87,15 +87,18 @@ public class inventory_class {
     public void cancelRecTrans(Activity activity,String transactionNumber){
         String resultcolumnName = returnTransactionType(activity, transactionNumber);
         String columnName = "";
-        switch (resultcolumnName.toLowerCase()){
-            case "received from production" :
+        switch (resultcolumnName){
+            case "Received from Production" :
                 columnName = "productionin";
                 break;
-            case "received from other branch":
+            case "Received from Other Branch":
                 columnName = "itemin";
                 break;
-            case  "transfer item":
+            case  "Transfer Item":
                 columnName = "transfer";
+                break;
+            case  "Received from Direct Supplier":
+                columnName = "supin";
                 break;
         }
         try {
@@ -123,6 +126,7 @@ public class inventory_class {
                             + "=" + quantity + ",variance" + (columnName.equals("transfer") ? "-" : "+")  + "=" + quantity + " WHERE " +
                             "invnum=(SELECT TOP 1 inv_id FROM tblproduction WHERE transaction_number='" + transactionNumber + "') " +
                             "AND itemname='" + item_name + "';";
+                    System.out.println(query2);
                     Statement stmt = con.createStatement();
                     stmt.executeUpdate(query2);
                 }

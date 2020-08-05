@@ -168,7 +168,8 @@ public class MainMenu extends AppCompatActivity {
 
     public void gotoReceived(){
         Intent intent = new Intent(getBaseContext(), Received.class);
-        intent.putExtra("type", "Received from Production");
+//        intent.putExtra("type", "Received from Production");
+        intent.putExtra("type", "Received from Direct Supplier");
         startActivity(intent);
     }
 }

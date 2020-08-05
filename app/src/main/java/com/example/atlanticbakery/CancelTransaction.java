@@ -146,7 +146,7 @@ public class CancelTransaction extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 ic.cancelRecTrans(CancelTransaction.this, currentTransactionNumber);
                                 layoutItems.removeAllViews();
-                                linearTransactions.removeAllViews();
+                                loadTransactions("");
                                 TextView txtHeader = findViewById(R.id.txtHeader);
                                 TextView txtHeaderItems = findViewById(R.id.txtHeaderItems);
                                 txtHeader.setText("TRANSACTIONS (0)");
