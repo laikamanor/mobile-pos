@@ -8,15 +8,22 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.text.Html;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.Objects;
 
@@ -29,8 +36,12 @@ public class QRCode extends AppCompatActivity {
 
     long mLastClickTime = 0;
 
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle toggle;
+
     //   Classes
     item_class itemc = new item_class();
+    ui_class uic = new ui_class();
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SuppressLint("RestrictedApi")
     @Override
@@ -38,15 +49,47 @@ public class QRCode extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_q_r_code);
 
+        NavigationView navigationView = findViewById(R.id.nav);
+        drawerLayout = findViewById(R.id.navDrawer);
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
+
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Objects.requireNonNull(getSupportActionBar()).setTitle(Html.fromHtml("<font color='#ffffff'>Scan QR Code</font>"));
-        getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
 
         resultText =  findViewById(R.id.lblResult);
         Button btnScan = findViewById(R.id.btnScan);
         Button btnCart = findViewById(R.id.btnAddCart);
         progressBar = findViewById(R.id.progWait);
         progressBar.setVisibility(View.GONE);
+
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @SuppressLint("WrongConstant")
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                boolean result = false;
+                switch (menuItem.getItemId()){
+                    case R.id.nav_scanItem :
+                        result = true;
+                        drawerLayout.closeDrawer(Gravity.START, false);
+                        break;
+                    case R.id.nav_exploreItems :
+                        Toast.makeText(QRCode.this, "Event is clicked", Toast.LENGTH_SHORT).show();
+                        result = true;
+                        drawerLayout.closeDrawer(Gravity.START, false);
+                        break;
+                    case R.id.nav_shoppingCart :
+                        result = true;
+                        drawerLayout.closeDrawer(Gravity.START, false);
+                        startActivity(uic.goTo(QRCode.this, ShoppingCart.class));
+                        break;
+                }
+                return result;
+            }
+        });
 
         btnScan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +143,14 @@ public class QRCode extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(toggle.onOptionsItemSelected(item)){
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @SuppressLint("SetTextI18n")

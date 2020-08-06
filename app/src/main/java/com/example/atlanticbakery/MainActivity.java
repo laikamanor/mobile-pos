@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public  void openMainMenu(){
-        Intent intent = new Intent(this, MainMenu.class);
+        Intent intent = new Intent(this, Nav.class);
         startActivity(intent);
         finish();
     }

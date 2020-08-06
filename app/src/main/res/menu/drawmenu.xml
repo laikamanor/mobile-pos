@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Signed In Gordon Macaraeg">
+        <group android:checkableBehavior="single">
+        </group>
+    </item>
+    <item android:title="Settings">
+        <group android:checkableBehavior="single">
+            <menu>
+                <item
+                    android:id="@+id/nav_logOut"
+                    android:icon="@drawable/logout"
+                    android:title="Logout" />
+                <item
+                    android:id="@+id/nav_cutOff"
+                    android:icon="@drawable/ic_cutoff"
+                    android:title="Cut Off" />
+            </menu>
+        </group>
+    </item>
+    <item android:title="Items">
+        <group android:checkableBehavior="single">
+        <menu>
+            <item
+                android:id="@+id/nav_scanItem"
+                android:icon="@drawable/ic_scan"
+                android:title="Scan Item" />
+            <item
+                android:id="@+id/nav_exploreItems"
+                android:icon="@drawable/ic_availableitems"
+                android:title="Available Items" />
+            <item
+                android:id="@+id/nav_shoppingCart"
+                android:icon="@drawable/ic_shoppingcart"
+                android:title="Shopping Cart" />
+        </menu>
+        </group>
+    </item>
+    <item android:title="Inventory">
+        <group android:checkableBehavior="single">
+            <menu>
+                <item
+                    android:id="@+id/nav_receivedProduction"
+                    android:icon="@drawable/ic_receivedproduction"
+                    android:title="Received from Production" />
+                <item
+                    android:id="@+id/nav_receivedBranch"
+                    android:icon="@drawable/ic_receivedbranch"
+                    android:title="Received from Other Branch" />
+                <item
+                    android:id="@+id/nav_receivedSupplier"
+                    android:icon="@drawable/ic_receivedsupplier"
+                    android:title="Received from Supplier" />
+                <item
+                    android:id="@+id/nav_adjusmentIn"
+                    android:icon="@drawable/ic_adjustmentin"
+                    android:title="Adjustment In" />
+                <item
+                    android:id="@+id/nav_adjustmentOut"
+                    android:icon="@drawable/ic_transferout"
+                    android:title="Adjustment Out" />
+                <item
+                    android:id="@+id/nav_transferOut"
+                    android:icon="@drawable/ic_transferout"
+                    android:title="Transfer Out" />
+                <item
+                    android:id="@+id/nav_cancelRecTrans"
+                    android:icon="@drawable/cancel"
+                    android:title="Cancel Rec/Trans" />
+            </menu>
+        </group>
+    </item>
+</menu>

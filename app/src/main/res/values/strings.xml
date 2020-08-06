@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Atlantic Bakery</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
     <string name="title_activity_main_menu2">MainMenu2</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

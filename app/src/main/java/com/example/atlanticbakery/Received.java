@@ -37,6 +37,7 @@ public class Received extends AppCompatActivity {
     Connection con;
     connection_class cc = new connection_class();
     inventory_class ic = new inventory_class();
+    user_class uc = new user_class();
     Received_SQLite myDb;
     long mLastClickTime = 0;
     AutoCompleteTextView txtSearch;
@@ -84,8 +85,8 @@ public class Received extends AppCompatActivity {
             public void onClick(View v) {
                 final String title = Objects.requireNonNull(Objects.requireNonNull(getSupportActionBar()).getTitle()).toString().trim();
                 if(title.equals("Transfer Out") || title.equals("Received from Direct Supplier")){
-                    final AlertDialog.Builder dialogConfirmation = new AlertDialog.Builder(Received.this);
-                    dialogConfirmation.setCancelable(false);
+                    AlertDialog.Builder dialogCmb = new AlertDialog.Builder(Received.this);
+                    dialogCmb.setCancelable(false);
                     LinearLayout layout = new LinearLayout(Received.this);
                     layout.setPadding(40,40,40,40);
                     layout.setOrientation(LinearLayout.VERTICAL);
@@ -94,9 +95,9 @@ public class Received extends AppCompatActivity {
                     txtSpinner.setHint((title.equals("Received from Direct Supplier") ? "Select Supplier" : "Select Branch"));
                     txtSpinner.setAdapter(fillAdapter(fillSpinner(title)));
                     layout.addView(txtSpinner);
-                    dialogConfirmation.setView(layout);
+                    dialogCmb.setView(layout);
 
-                    dialogConfirmation.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                    dialogCmb.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             boolean isExist = brasupExist(title, txtSpinner.getText().toString().trim());
@@ -112,13 +113,13 @@ public class Received extends AppCompatActivity {
                         }
                     });
 
-                    dialogConfirmation.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    dialogCmb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                         }
                     });
-                    dialogConfirmation.show();
+                    dialogCmb.show();
                 }else{
                     clickk(title);
                 }
@@ -133,7 +134,7 @@ public class Received extends AppCompatActivity {
             if (con == null) {
                 Toast.makeText(this, "Check Your Internet Access", Toast.LENGTH_SHORT).show();
             } else {
-                String transbraQuery = "SELECT branchcode AS result FROM vLoadBranches WHERE status=1 AND main !=1 AND branch='" + value + "';";
+                String transbraQuery = "SELECT branchcode AS result FROM vLoadBranches WHERE status=1 AND main !=1 AND branchcode='" + value + "';";
                 String supQuery = "SELECT name  AS result FROM tblcustomers WHERE type='Supplier' AND status=1 AND name='" + value + "';";
                 String query = "";
                 switch (title) {
@@ -155,10 +156,9 @@ public class Received extends AppCompatActivity {
         }
         return result;
     }
-
     @SuppressLint("SetTextI18n")
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-    public void clickk(String title){
+    public void clickk(final String title){
         final AlertDialog.Builder myDialog = new AlertDialog.Builder(Received.this);
         LinearLayout layout = new LinearLayout(Received.this);
         layout.setPadding(40,40,40,40);
@@ -229,7 +229,6 @@ public class Received extends AppCompatActivity {
         layout.addView(txtRemarks);
 
         myDialog.setView(layout);
-
         myDialog.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
@@ -242,38 +241,42 @@ public class Received extends AppCompatActivity {
                 else if(txtRemarks.getText().toString().equals("")){
                     Toast.makeText(Received.this, "Remarks field is empty", Toast.LENGTH_SHORT).show();
                 }else{
-                    String sapNumber;
-                    sapNumber = (toFollow.isChecked() ? "To Follow" : txtSAPNumber.getText().toString());
-                    String columnName = "";
-                    String operator = "";
-                    String title = Objects.requireNonNull(Objects.requireNonNull(getSupportActionBar()).getTitle()).toString().trim();
-                    switch (title) {
-                        case "Received from Production":
-                            columnName = "productionin";
-                            operator = "+";
-                            break;
-                        case "Received from Other Branch":
-                            columnName = "itemin";
-                            operator = "+";
-                            break;
-                        case "Received from Direct Supplier":
-                            columnName = "supin";
-                            operator = "+";
-                            break;
-                        case "Received from Adjustment":
-                            columnName = "adjustmentin";
-                            operator = "+";
-                            break;
-                        case "Adjustment Out":
-                            columnName = "pullout";
-                            operator = "-";
-                            break;
-                        case "Transfer Out":
-                            columnName = "transfer";
-                            operator = "-";
-                            break;
+                    if(title.equals("Transfer Out")){
+                        final AlertDialog.Builder dialogConfirmation = new AlertDialog.Builder(Received.this);
+                        dialogConfirmation.setCancelable(false);
+                        LinearLayout layout = new LinearLayout(Received.this);
+                        layout.setPadding(40,40,40,40);
+                        layout.setOrientation(LinearLayout.VERTICAL);
+
+                        final EditText txtPassword = new EditText(Received.this);
+                        txtPassword.setHint("Enter Password");
+                        layout.addView(txtPassword);
+                        dialogConfirmation.setView(layout);
+                        dialogConfirmation.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                SharedPreferences sharedPreferences = getSharedPreferences("LOGIN", MODE_PRIVATE);
+                                int userID = Integer.parseInt(Objects.requireNonNull(Objects.requireNonNull(sharedPreferences.getString("userid", ""))));
+                                int isPasswordCorrect = uc.checkUsernamePassword(Received.this, "systemid", Integer.toString(userID), txtPassword.getText().toString());
+                                if(isPasswordCorrect <= 0){
+                                    Toast.makeText(Received.this, "Wrong Password", Toast.LENGTH_SHORT).show();
+                                }else{
+                                    insertData(toFollow.isChecked(),txtSAPNumber.getText().toString(), txtRemarks.getText().toString());
+                                }
+                            }
+                        });
+
+                        dialogConfirmation.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        dialogConfirmation.show();
+                    }else{
+                        insertData(toFollow.isChecked(),txtSAPNumber.getText().toString(), txtRemarks.getText().toString());
                     }
-                    saveData( operator, columnName,sapNumber, txtRemarks.getText().toString());
                 }
 
             }
@@ -287,6 +290,42 @@ public class Received extends AppCompatActivity {
         });
 
         myDialog.show();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void insertData(boolean toFollow, String txtSAPNumber, String remarks){
+        String sapNumber;
+        sapNumber = (toFollow ? "To Follow" : txtSAPNumber);
+        String columnName = "";
+        String operator = "";
+        String title = Objects.requireNonNull(Objects.requireNonNull(getSupportActionBar()).getTitle()).toString().trim();
+        switch (title) {
+            case "Received from Production":
+                columnName = "productionin";
+                operator = "+";
+                break;
+            case "Received from Other Branch":
+                columnName = "itemin";
+                operator = "+";
+                break;
+            case "Received from Direct Supplier":
+                columnName = "supin";
+                operator = "+";
+                break;
+            case "Received from Adjustment":
+                columnName = "adjustmentin";
+                operator = "+";
+                break;
+            case "Adjustment Out":
+                columnName = "pullout";
+                operator = "-";
+                break;
+            case "Transfer Out":
+                columnName = "transfer";
+                operator = "-";
+                break;
+        }
+        saveData( operator, columnName,sapNumber, remarks);
     }
 
     public ArrayAdapter<String> fillAdapter(List<String> names){

@@ -16,8 +16,8 @@
         <activity android:name=".Main"></activity>
         <activity android:name=".CancelTransactionPOS" />
         <activity
-            android:name=".Nav"
-            android:label="@string/title_activity_nav" />
+            android:name=".Nav">
+        </activity>
         <activity
             android:name=".CancelTransaction"
             android:parentActivityName=".MainMenu" />
@@ -36,8 +36,9 @@
             android:name=".CreateUser"
             android:parentActivityName=".MainMenu" />
         <activity
-            android:name=".ShoppingCart"
-            android:parentActivityName=".MainMenu" />
+            android:name=".ShoppingCart" />
+        <activity
+            android:name=".QRCode" />
         <activity
             android:name=".ScanCode"
             android:parentActivityName=".QRCode" />

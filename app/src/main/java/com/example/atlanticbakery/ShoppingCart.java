@@ -14,6 +14,7 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -29,10 +30,17 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
+
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+import com.google.android.material.navigation.NavigationView;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -46,7 +54,10 @@ public class ShoppingCart extends AppCompatActivity {
     String discountName = "";
     long mLastClickTime = 0;
 
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle toggle;
     shoppingCart_class sc = new shoppingCart_class();
+    ui_class uic = new ui_class();
     user_class uc = new user_class();
     connection_class cc = new connection_class();
     @SuppressLint("RestrictedApi")
@@ -57,11 +68,54 @@ public class ShoppingCart extends AppCompatActivity {
         setContentView(R.layout.activity_shopping_cart);
         myDb = new DatabaseHelper(this);
 
+
+        NavigationView navigationView = findViewById(R.id.nav);
+        drawerLayout = findViewById(R.id.navDrawer);
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
+
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @SuppressLint("WrongConstant")
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                boolean result = false;
+                switch (menuItem.getItemId()){
+                    case R.id.nav_scanItem :
+                        result = true;
+                        drawerLayout.closeDrawer(Gravity.START, false);
+                        startActivity(uic.goTo(ShoppingCart.this, QRCode.class));
+                        finish();
+                        break;
+                    case R.id.nav_exploreItems :
+                        Toast.makeText(ShoppingCart.this, "Event is clicked", Toast.LENGTH_SHORT).show();
+                        result = true;
+                        drawerLayout.closeDrawer(Gravity.START, false);
+                        break;
+                    case R.id.nav_shoppingCart :
+                        result = true;
+                        drawerLayout.closeDrawer(Gravity.START, false);
+                        break;
+                }
+                return result;
+            }
+        });
+
         Objects.requireNonNull(Objects.requireNonNull(getSupportActionBar())).setTitle(Html.fromHtml("<font color='#ffffff'>Shopping Cart</font>"));
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
 
         loadData();
         computeTotal();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(toggle.onOptionsItemSelected(item)){
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @SuppressLint({"SetTextI18n", "ResourceType", "RtlHardcoded"})
