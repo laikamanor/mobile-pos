@@ -1,216 +1,231 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Inventory"
-    android:layout_margin="30dp"
-    android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navDrawer"
+    android:background="@android:color/white">
 
-
-    <AutoCompleteTextView
-        android:id="@+id/txtItemName"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:hint="Enter Item"
-        android:layout_marginBottom="10dp"/>
+        android:layout_height="match_parent"
+        android:layout_margin="30dp"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/txtDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:text="MM/dd/yyyy" />
-
-    <Button
-        android:id="@+id/btnSearch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Search Item"
-        android:background="@android:color/holo_blue_light"
-        android:textColor="@android:color/white"
-        android:textSize="20sp"
-        android:layout_marginBottom="20dp"/>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
+        <AutoCompleteTextView
+            android:id="@+id/txtItemName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:text=""
+            android:hint="Enter Item"
+            android:layout_marginBottom="10dp"/>
 
-            <TextView
-                android:id="@+id/txtBegBal"
+        <TextView
+            android:id="@+id/txtDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="MM/dd/yyyy" />
+
+        <Button
+            android:id="@+id/btnSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Search Item"
+            android:background="@android:color/holo_blue_light"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:layout_marginBottom="20dp"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="Beginning Balance: 0"
-                android:textSize="20sp" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/txtProductionIn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="Production In: 0"
-                android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/txtBegBal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Beginning Balance: 0"
+                    android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/txtBranchIn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="Branch In: 0"
-                android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/txtProductionIn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Production In: 0"
+                    android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/txtSupplierIn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="Supplier In: 0"
-                android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/txtBranchIn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Branch In: 0"
+                    android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/AdjustmentIn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="Adjustment In: 0"
-                android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/txtSupplierIn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Supplier In: 0"
+                    android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/ConversionIn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="Conversion In: 0"
-                android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/AdjustmentIn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Adjustment In: 0"
+                    android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/TotalAvailable"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="Total Qty. Available: 0"
-                android:textSize="23sp" />
+                <TextView
+                    android:id="@+id/ConversionIn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Conversion In: 0"
+                    android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/TransferOut"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="Transfer Out: 0"
-                android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/TotalAvailable"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Total Qty. Available: 0"
+                    android:textSize="23sp" />
 
-            <TextView
-                android:id="@+id/CounterOut"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="Counter Out: 0"
-                android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/TransferOut"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Transfer Out: 0"
+                    android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/ARCharge"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="A.R Charge: 0"
-                android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/CounterOut"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Counter Out: 0"
+                    android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/ARSales"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="A.R Sales: 0"
-                android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/ARCharge"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="A.R Charge: 0"
+                    android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/ConversionOut"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="Conversion Out: 0"
-                android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/ARSales"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="A.R Sales: 0"
+                    android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/AdjustmentOut"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="Adjustment Out: 0"
-                android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/ConversionOut"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Conversion Out: 0"
+                    android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/EndingBalance"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="Ending Balance: 0"
-                android:textSize="25sp" />
+                <TextView
+                    android:id="@+id/AdjustmentOut"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Adjustment Out: 0"
+                    android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/ActualEndingBalance"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="Actual Ending Balance: 0"
-                android:textColor="@android:color/holo_red_dark"
-                android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/EndingBalance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Ending Balance: 0"
+                    android:textSize="25sp" />
 
-            <TextView
-                android:id="@+id/Variance"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="Variance: 0"
-                android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/ActualEndingBalance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Actual Ending Balance: 0"
+                    android:textColor="@android:color/holo_red_dark"
+                    android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/ShortOver"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="Short/Over: 0"
-                android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/Variance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Variance: 0"
+                    android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/ShortOverAmount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="Short/Over Amount: 0"
-                android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/ShortOver"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Short/Over: 0"
+                    android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/CounterOutAmount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="Counter Out Amount: 0"
-                android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/ShortOverAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Short/Over Amount: 0"
+                    android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/ARChargeAmount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="A.R Charge Amount: 0"
-                android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/CounterOutAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Counter Out Amount: 0"
+                    android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/ARSalesAmount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="A.R Sales Amount: 0"
-                android:textSize="20sp" />
-        </LinearLayout>
-    </ScrollView>
+                <TextView
+                    android:id="@+id/ARChargeAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="A.R Charge Amount: 0"
+                    android:textSize="20sp" />
 
-</LinearLayout>
+                <TextView
+                    android:id="@+id/ARSalesAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="A.R Sales Amount: 0"
+                    android:textSize="20sp" />
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        app:menu="@menu/drawmenu"
+        android:layout_gravity="start">
+    </com.google.android.material.navigation.NavigationView>
+
+</androidx.drawerlayout.widget.DrawerLayout>

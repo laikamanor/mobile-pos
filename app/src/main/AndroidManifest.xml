@@ -47,6 +47,9 @@
             android:parentActivityName=".MainMenu" />
         <activity android:name=".MainMenu" />
         <activity android:name=".MainActivity" />
+        <activity android:name=".AvailableItems">
+        </activity>
+        <activity android:name=".ItemInfo" />
     </application>
 
 </manifest>

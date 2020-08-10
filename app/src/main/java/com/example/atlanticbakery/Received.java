@@ -2,6 +2,7 @@ package com.example.atlanticbakery;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -11,6 +12,8 @@ import android.os.SystemClock;
 import android.text.Html;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -22,9 +25,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.navigation.NavigationView;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -42,6 +50,11 @@ public class Received extends AppCompatActivity {
     long mLastClickTime = 0;
     AutoCompleteTextView txtSearch;
     String selectedBranch = "";
+
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle toggle;
+
+    ui_class uic = new ui_class();
     @SuppressLint("RestrictedApi")
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -50,9 +63,95 @@ public class Received extends AppCompatActivity {
         setContentView(R.layout.activity_received);
         myDb = new Received_SQLite(this);
         myDb.truncateTable();
+
+        NavigationView navigationView = findViewById(R.id.nav);
+        drawerLayout = findViewById(R.id.navDrawer);
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
+
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @SuppressLint("WrongConstant")
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                boolean result = false;
+                Intent intent;
+                switch (menuItem.getItemId()){
+                    case R.id.nav_scanItem :
+                        result = true;
+                        drawerLayout.closeDrawer(Gravity.START, false);
+                        startActivity(uic.goTo(Received.this, QRCode.class));
+                        finish();
+                        break;
+                    case R.id.nav_exploreItems :
+                        Toast.makeText(Received.this, "Event is clicked", Toast.LENGTH_SHORT).show();
+                        result = true;
+                        drawerLayout.closeDrawer(Gravity.START, false);
+                        break;
+                    case R.id.nav_shoppingCart :
+                        result = true;
+                        drawerLayout.closeDrawer(Gravity.START, false);
+                        startActivity(uic.goTo(Received.this, ShoppingCart.class));
+                        finish();
+                        break;
+                    case R.id.nav_receivedProduction :
+                        result = true;
+                        intent = new Intent(getBaseContext(), Received.class);
+                        intent.putExtra("type", "Received from Production");
+                        startActivity(intent);
+                        finish();
+                        break;
+                    case R.id.nav_receivedBranch :
+                        result = true;
+                        intent = new Intent(getBaseContext(), Received.class);
+                        intent.putExtra("type", "Received from Other Branch");
+                        startActivity(intent);
+                        finish();
+                        break;
+                    case R.id.nav_receivedSupplier :
+                        result = true;
+                        intent = new Intent(getBaseContext(), Received.class);
+                        intent.putExtra("type", "Received from Direct Supplier");
+                        startActivity(intent);
+                        finish();
+                        break;
+                    case R.id.nav_transferOut :
+                        result = true;
+                        intent = new Intent(getBaseContext(), Received.class);
+                        intent.putExtra("type", "Transfer Out");
+                        startActivity(intent);
+                        finish();
+                        break;
+                    case R.id.nav_adjusmentIn :
+                        result = true;
+                        intent = new Intent(getBaseContext(), Received.class);
+                        intent.putExtra("type", "Received from Adjustment");
+                        startActivity(intent);
+                        finish();
+                        break;
+                    case R.id.nav_adjustmentOut :
+                        result = true;
+                        intent = new Intent(getBaseContext(), Received.class);
+                        intent.putExtra("type", "Adjustment Out");
+                        startActivity(intent);
+                        finish();
+                        break;
+                    case R.id.nav_inventory :
+                        result = true;
+                        intent = new Intent(getBaseContext(), Inventory.class);
+                        startActivity(intent);
+                        finish();
+                        break;
+                }
+                return result;
+            }
+        });
+
         String TransactionType = getIntent().getStringExtra("type");
-        Objects.requireNonNull(getSupportActionBar()).setTitle(Html.fromHtml("<font color='#ffffff'>" + TransactionType + " </font>"));
-        getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(Html.fromHtml("<font color='#ffffff'>" + TransactionType + " </font>"));;
         String latestInventoryDate = ic.returnLatestInventoryDate(Received.this);
         txtSearch = findViewById(R.id.txtSearch);
         txtSearch.setAdapter(ic.fillAdapter(Received.this, ic.returnAvailableItems(Received.this, latestInventoryDate)));
@@ -60,6 +159,8 @@ public class Received extends AppCompatActivity {
         String rectrans = (title.equals("Transfer Out") || title.equals("Adjustment Out") ? "trans" : "rec");
         loadItems(rectrans, latestInventoryDate,"");
         loadSelectedItem();
+
+
 
         Button btnSearch = findViewById(R.id.btnSearch);
         btnSearch.setOnClickListener(new View.OnClickListener() {
@@ -125,6 +226,14 @@ public class Received extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(toggle.onOptionsItemSelected(item)){
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public boolean brasupExist(String title, String value){

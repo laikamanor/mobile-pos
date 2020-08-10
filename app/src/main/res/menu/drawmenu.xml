@@ -40,6 +40,10 @@
         <group android:checkableBehavior="single">
             <menu>
                 <item
+                    android:id="@+id/nav_inventory"
+                    android:icon="@drawable/ic_receivedproduction"
+                    android:title="Inventory" />
+                <item
                     android:id="@+id/nav_receivedProduction"
                     android:icon="@drawable/ic_receivedproduction"
                     android:title="Received from Production" />

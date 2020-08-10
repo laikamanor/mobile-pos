@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreateUser"
-    android:orientation="vertical"
-    android:theme="@style/ThemeOverlay.AppCompat.Light"
-
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navDrawer"
     >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -94,7 +97,16 @@
             android:textColor="@android:color/white"
             android:layout_marginTop= "10dp"
             android:text="Proceed" />
-
-
     </LinearLayout>
-</ScrollView>
+    </ScrollView>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        app:menu="@menu/drawmenu"
+        android:layout_gravity="start">
+    </com.google.android.material.navigation.NavigationView>
+
+</androidx.drawerlayout.widget.DrawerLayout>

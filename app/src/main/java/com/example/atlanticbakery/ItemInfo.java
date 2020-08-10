@@ -1,22 +1,4 @@
 package com.example.atlanticbakery;
-import android.annotation.SuppressLint;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.SystemClock;
-import android.text.Html;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -24,33 +6,63 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.annotation.SuppressLint;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.text.Html;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.Objects;
 
-public class QRCode extends AppCompatActivity {
-    @SuppressLint("StaticFieldLeak")
-    public static TextView resultText;
-    ProgressBar progressBar;
-
-    DatabaseHelper myDb = new DatabaseHelper(this);
-
-    long mLastClickTime = 0;
+public class ItemInfo extends AppCompatActivity {
+    TextView txtItemName;
+    EditText txtQuantity;
+    Button btnMinus, btnPlus, btnAddCart;
+    String itemName;
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
 
-    //   Classes
     item_class itemc = new item_class();
     ui_class uic = new ui_class();
+    DatabaseHelper myDb;
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    @SuppressLint("RestrictedApi")
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scan_q_r_code);
+        setContentView(R.layout.activity_item_info);
 
-        final NavigationView navigationView = findViewById(R.id.nav);
+        myDb = new DatabaseHelper(this);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(Html.fromHtml("<font color='#ffffff'>Add Quantity</font>"));
+
+        txtQuantity = findViewById(R.id.txtQuantity);
+        btnMinus = findViewById(R.id.btnMinus);
+        btnPlus = findViewById(R.id.btnPlus);
+        btnAddCart = findViewById(R.id.btnAddCart);
+
+        itemName = getIntent().getStringExtra("itemname");
+
+        txtItemName = findViewById(R.id.itemName);
+        txtItemName.setText(itemName);
+
+
+        txtQuantity.setText("0");
+        txtQuantity.setBackgroundResource(R.drawable.custom_edittext);
+
+        NavigationView navigationView = findViewById(R.id.nav);
         drawerLayout = findViewById(R.id.navDrawer);
         toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
 
@@ -58,38 +70,29 @@ public class QRCode extends AppCompatActivity {
         toggle.syncState();
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        Objects.requireNonNull(getSupportActionBar()).setTitle(Html.fromHtml("<font color='#ffffff'>Scan QR Code</font>"));
-
-        resultText =  findViewById(R.id.lblResult);
-        Button btnScan = findViewById(R.id.btnScan);
-        Button btnCart = findViewById(R.id.btnAddCart);
-        progressBar = findViewById(R.id.progWait);
-        progressBar.setVisibility(View.GONE);
-
-
-        loadShoppingCartCount();
-
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @SuppressLint("WrongConstant")
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                boolean result = false;
                 Intent intent;
+                boolean result = false;
                 switch (menuItem.getItemId()){
                     case R.id.nav_scanItem :
                         result = true;
                         drawerLayout.closeDrawer(Gravity.START, false);
+                        startActivity(uic.goTo(ItemInfo.this, QRCode.class));
+                        finish();
                         break;
                     case R.id.nav_exploreItems :
                         result = true;
                         drawerLayout.closeDrawer(Gravity.START, false);
-                        startActivity(uic.goTo(QRCode.this, AvailableItems.class));
+                        startActivity(uic.goTo(ItemInfo.this, AvailableItems.class));
                         finish();
                         break;
                     case R.id.nav_shoppingCart :
                         result = true;
                         drawerLayout.closeDrawer(Gravity.START, false);
-                        startActivity(uic.goTo(QRCode.this, ShoppingCart.class));
+                        startActivity(uic.goTo(ItemInfo.this, ShoppingCart.class));
                         finish();
                         break;
                     case R.id.nav_receivedProduction :
@@ -146,66 +149,61 @@ public class QRCode extends AppCompatActivity {
             }
         });
 
-        btnScan.setOnClickListener(new View.OnClickListener() {
+
+        btnMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(SystemClock.elapsedRealtime() - mLastClickTime < 1000){
-                    return;
-                }
-                mLastClickTime = SystemClock.elapsedRealtime();
-                startActivity(new Intent(getApplicationContext(), ScanCode.class));
+                txtQuantity.setText(minusPlus("-"));
             }
         });
-        btnCart.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("SetTextI18n")
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        btnPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String itemName = resultText.getText().toString();
-                boolean hasStock = itemc.checkItemNameStock(QRCode.this, itemName);
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
-                    return;
-                }
-                mLastClickTime = SystemClock.elapsedRealtime();
-                if (itemName.equals("Result: N/A")) {
-                    Toast.makeText(QRCode.this, "Scan Item first", Toast.LENGTH_SHORT).show();
-                } else {
-                    boolean isItemNameExist = itemc.checkItemName(QRCode.this, itemName);
-                    if (!isItemNameExist) {
-                        Toast.makeText(QRCode.this, "item not found", Toast.LENGTH_SHORT).show();
-                    } else if (hasStock) {
-                        saveData();
-                    }else if(!hasStock) {
-                        final AlertDialog.Builder myDialog = new AlertDialog.Builder(QRCode.this);
-                        myDialog.setTitle("Atlantic Bakery");
-                        myDialog.setMessage("This item is out of stock! Are you sure you want to add to cart?");
-                        myDialog.setCancelable(false);
-                        myDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                saveData();
-                            }
-                        });
+                txtQuantity.setText(minusPlus("+"));
+                txtQuantity.setSelection(txtQuantity.getText().length());
+            }
+        });
 
-                        myDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                        myDialog.show();
-                    }
+        btnAddCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean isItemNameExist = itemc.checkItemName(ItemInfo.this, itemName);
+                boolean hasStock = itemc.checkItemNameStock(ItemInfo.this, itemName);
+                int quantity;
+                if(txtQuantity.getText().toString().isEmpty()){
+                    quantity = 0;
+                    txtQuantity.setText("0");
+                }else{
+                    quantity = Integer.parseInt(txtQuantity.getText().toString());
+                }
+                if (!isItemNameExist) {
+                    Toast.makeText(ItemInfo.this, "item not found", Toast.LENGTH_SHORT).show();
+                }else if(quantity <=0){
+                    Toast.makeText(ItemInfo.this, "Add Quantity atleast 1", Toast.LENGTH_SHORT).show();
+                }else if (hasStock) {
+                    saveData();
+                }else if(!hasStock) {
+                    final AlertDialog.Builder myDialog = new AlertDialog.Builder(ItemInfo.this);
+                    myDialog.setTitle("Atlantic Bakery");
+                    myDialog.setMessage("This item is out of stock! Are you sure you want to add to cart?");
+                    myDialog.setCancelable(false);
+                    myDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            saveData();
+                        }
+                    });
+
+                    myDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    myDialog.show();
                 }
             }
         });
-    }
-
-    public void loadShoppingCartCount(){
-        NavigationView navigationView = findViewById(R.id.nav);
-        Menu menu = navigationView.getMenu();
-        MenuItem nav_shoppingCart = menu.findItem(R.id.nav_shoppingCart);
-        int totalItems = myDb.countItems();
-        nav_shoppingCart.setTitle("Shopping Cart (" + totalItems + ")");
     }
 
     @Override
@@ -215,6 +213,23 @@ public class QRCode extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public String minusPlus(String operator){
+        int quantity;
+        if(txtQuantity.getText().toString().isEmpty()){
+            quantity = 0;
+        }else{
+            quantity = Integer.parseInt(txtQuantity.getText().toString());
+        }
+        if(operator.equals("+")){
+            quantity += 1;
+        }else {
+            if(quantity > 0){
+                quantity -= 1;
+            }
+        }
+        return Integer.toString(quantity);
     }
 
     @SuppressLint("SetTextI18n")
@@ -227,25 +242,23 @@ public class QRCode extends AppCompatActivity {
     public class checkItem extends AsyncTask<String, String, String> {
         String z = "";
 
-        final LoadingDialog loadingDialog = new LoadingDialog(QRCode.this);
+        final LoadingDialog loadingDialog = new LoadingDialog(ItemInfo.this);
 
         @Override
         protected void onPreExecute() {
             loadingDialog.startLoadingDialog();
         }
 
-        @SuppressLint("SetTextI18n")
         @Override
         protected String doInBackground(String... params) {
-            String itemName = resultText.getText().toString();
-            double price = itemc.returnItemNamePrice(QRCode.this, itemName);
-            boolean isInserted = myDb.insertData(1.0, 0.00, price, 0, price, itemName);
+            double price = itemc.returnItemNamePrice(ItemInfo.this, itemName);
+            double quantity = Double.parseDouble(txtQuantity.getText().toString());
+            boolean isInserted = myDb.insertData(quantity, 0.00, price, 0, price, itemName);
             if (isInserted) {
                 z = "Item Added";
             } else {
                 z = "Item Not Added";
             }
-            resultText.setText("Result: N/A");
             return z;
         }
 
@@ -255,11 +268,19 @@ public class QRCode extends AppCompatActivity {
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(QRCode.this, s, Toast.LENGTH_LONG).show();
+                    Toast.makeText(ItemInfo.this, s, Toast.LENGTH_LONG).show();
                     loadingDialog.dismissDialog();
                 }
             };
             handler.postDelayed(r, 1000);
         }
+    }
+
+    public void loadShoppingCartCount(){
+        NavigationView navigationView = findViewById(R.id.nav);
+        Menu menu = navigationView.getMenu();
+        MenuItem nav_shoppingCart = menu.findItem(R.id.nav_shoppingCart);
+        int totalItems = myDb.countItems();
+        nav_shoppingCart.setTitle("Shopping Cart (" + totalItems + ")");
     }
 }
