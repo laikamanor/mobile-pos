@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -233,7 +234,10 @@ public class AvailableItems extends AppCompatActivity {
                     cardView.setLayoutParams(layoutParamsCv);
                     cardView.setRadius(12);
                     cardView.setCardElevation(5);
+
+
                     gridLayout.addView(cardView);
+
                     LinearLayout linearLayout = new LinearLayout(this);
                     LinearLayout.LayoutParams layoutParamsLinear = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 5f);
                     linearLayout.setLayoutParams(layoutParamsLinear);
@@ -244,12 +248,14 @@ public class AvailableItems extends AppCompatActivity {
                     cardView.addView(linearLayout);
 
                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                    layoutParams.setMargins(20, 50, 20, 0);
+                    layoutParams.setMargins(20, 0, 20, 0);
                     LinearLayout.LayoutParams layoutParamsItemLeft = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    layoutParamsItemLeft.setMargins(20, -50, 10, 10);
+                    layoutParamsItemLeft.setMargins(20, -50, 0, 10);
 
                     TextView txtItemName = new TextView(this);
-                    txtItemName.setText(itemName + "\n" + price);
+
+                    String c = cutWord(itemName);
+                    txtItemName.setText(c + "\n" + price);
                     txtItemName.setLayoutParams(layoutParams);
                     txtItemName.setTextSize(20);
                     linearLayout.addView(txtItemName);
@@ -291,5 +297,14 @@ public class AvailableItems extends AppCompatActivity {
         }catch (Exception ex){
             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public String cutWord(String value){
+        String result = "";
+        int limit = 25;
+        int limitTo = limit - 3;
+        result = (value.length() > limit ? value.substring(0, limitTo) + "..." : value);
+
+        return result;
     }
 }

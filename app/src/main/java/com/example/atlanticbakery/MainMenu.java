@@ -111,7 +111,6 @@ public class MainMenu extends AppCompatActivity {
         });
     }
 
-
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void checkWorkgroup(){
            Button btnAdmin = findViewById(R.id.admin);

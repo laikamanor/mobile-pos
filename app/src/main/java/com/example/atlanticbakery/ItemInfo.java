@@ -154,6 +154,7 @@ public class ItemInfo extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 txtQuantity.setText(minusPlus("-"));
+                txtQuantity.setSelection(txtQuantity.getText().length());
             }
         });
         btnPlus.setOnClickListener(new View.OnClickListener() {

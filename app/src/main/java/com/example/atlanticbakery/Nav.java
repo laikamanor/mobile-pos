@@ -43,6 +43,7 @@ public class Nav extends AppCompatActivity  {
 
         Objects.requireNonNull(getSupportActionBar()).setTitle(Html.fromHtml("<font color='#ffffff'>Main Menu</font>"));
 
+
         Menu menu = navigationView.getMenu();
         MenuItem nav_shoppingCart = menu.findItem(R.id.nav_shoppingCart);
         int totalItems = db.countItems();
@@ -119,6 +120,12 @@ public class Nav extends AppCompatActivity  {
                     case R.id.nav_inventory :
                         result = true;
                         intent = new Intent(getBaseContext(), Inventory.class);
+                        startActivity(intent);
+                        finish();
+                        break;
+                    case R.id.nav_cancelRecTrans :
+                        result = true;
+                        intent = new Intent(getBaseContext(), CancelTransaction.class);
                         startActivity(intent);
                         finish();
                         break;
